@@ -5,8 +5,6 @@ import Head from './Components/Head';
 import FilterButtons from './Components/FilterButtons';
 import DateSortButtons from './Components/DateSortButtons';
 
-var i=0;
-
 export default function App (){
     const [newTaskText, setNewTaskText] = useState('');
     const [todoId, setTodoId] = useState(0);
