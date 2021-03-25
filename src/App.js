@@ -4,6 +4,10 @@ import TasksList from './Components/TasksList.js';
 import Head from './Components/Head';
 import FilterButtons from './Components/FilterButtons';
 import DateSortButtons from './Components/DateSortButtons';
+import Grid from "@material-ui/core/Grid"
+import Pagination from '@material-ui/lab/Pagination';
+
+let currentTasks=[]
 
 export default function App (){
     const [newTaskText, setNewTaskText] = useState('');
@@ -13,21 +17,27 @@ export default function App (){
     const [initialTask, setInitialTask]=useState('');
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [filterName, setFilterName] = useState('All');
- 
+    const [numberOfPages, setNumberOfPages] = useState(1);
+    
+
     function filtering (filterName) {
         switch (filterName) {
             case 'All':
+                currentTasks=allTasks;
                 setFilteredTasks(allTasks);
                 break;
             case 'Done':
+                currentTasks=allTasks.filter((task) => task.completed === true);
                 setFilteredTasks(allTasks.filter((task) => task.completed === true));
                 break;
             case 'Undone':
+                currentTasks=allTasks.filter((task) => task.completed === false)
                 setFilteredTasks(allTasks.filter((task) => task.completed === false));
                 break;
             default:
                 break;
         }
+        setNumberOfPages(Math.trunc((currentTasks.length-1)/5)+1);
     }
 
     const changeNewTaskText = (e) => {
@@ -42,7 +52,7 @@ export default function App (){
           allTasks.push({text: newTaskText, completed: false, id: todoId, date: new Date()})
           setAllTasks([...allTasks]);
           filtering(filterName);        
-          setNewTaskText('');
+          setNewTaskText('');         
         }
     }
  
@@ -73,7 +83,9 @@ export default function App (){
     const removeTask = (removeId,e) => {
         e.preventDefault();
         setFilteredTasks(filteredTasks.filter(task => task.id !== removeId));
-        setAllTasks(allTasks.filter(task => task.id !== removeId));  
+        setAllTasks(allTasks.filter(task => task.id !== removeId));
+        currentTasks=filteredTasks.filter(task => task.id !== removeId);
+        setNumberOfPages(Math.trunc((currentTasks.length-1)/5)+1);
     }
 
     const sortTasksByUpDate = (e) => {
@@ -94,32 +106,39 @@ export default function App (){
     }
 
     const showDoneTasks = (e) => {
-        e.preventDefault();
+        e.preventDefault();        
         setFilterName('Done');
         filtering('Done');
+        
     }
       
     const showUndoneTasks = (e) => {
-        e.preventDefault();
+        e.preventDefault();        
         setFilterName('Undone');
         filtering('Undone');
+        
     }
   
     const showAllTasks = (e) => {
         e.preventDefault();
         setFilterName('All');
         filtering('All');
+        
     }
 
     return (
-        <main>
-            <Head />
-            <NewTask 
-                newTaskText = {newTaskText || ''}
-                changeNewTaskText = {changeNewTaskText}
-                addTaskInList = {addTaskInList}
-            />
-            <div>
+        <Grid>
+            <Grid container justify="center">
+                <Head />
+            </Grid>
+            <Grid container direction="row" justify="center" alignItems="center">
+                <NewTask 
+                    newTaskText = {newTaskText || ''}
+                    changeNewTaskText = {changeNewTaskText}
+                    addTaskInList = {addTaskInList}
+                />
+            </Grid>
+            <Grid container direction="row" justify="center" alignItems="center">
                 <FilterButtons 
                     showDoneTasks = {showDoneTasks}
                     showAllTasks = {showAllTasks}
@@ -129,7 +148,7 @@ export default function App (){
                     sortTasksByUpDate = {sortTasksByUpDate}
                     sortTasksByDownDate = {sortTasksByDownDate}
                 />
-            </div>
+            </Grid>
             <TasksList 
                 changeCheckTask = {changeCheckTask}
                 filteredTasks = {filteredTasks}
@@ -137,7 +156,9 @@ export default function App (){
                 pressKeyInEditMode = {pressKeyInEditMode}
                 removeTask = {removeTask}
             />
-        </main>
+            <Grid container justify="center">
+                <Pagination count={numberOfPages} color="secondary" />
+            </Grid>
+        </Grid>
     );
 }
-

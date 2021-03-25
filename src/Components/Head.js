@@ -1,5 +1,9 @@
 import React from 'react';
+import Box from '@material-ui/core/Box';
 
 export default function Head(){
-    return <h1>ToDo</h1>;
+    return (
+        <Box fontSize="h3.fontSize" m={1}>
+            ToDo
+        </Box>);
 }
