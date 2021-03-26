@@ -7,9 +7,11 @@ import DateSortButtons from './Components/DateSortButtons';
 import Grid from "@material-ui/core/Grid"
 import Pagination from '@material-ui/lab/Pagination';
 
-let currentTasks=[]
-
 export default function App (){
+    let currentTasks = [];
+    let numOfTasksOnPage = 5;
+    let page = 1;
+    
     const [newTaskText, setNewTaskText] = useState('');
     const [todoId, setTodoId] = useState(0);
     const [allTasks, setAllTasks] = useState([]);
@@ -18,26 +20,32 @@ export default function App (){
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [filterName, setFilterName] = useState('All');
     const [numberOfPages, setNumberOfPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [visibleTasks, setVisibleTasks] = useState([]);
     
+    function viewListOnPage (array) {
+        setVisibleTasks(array.slice(numOfTasksOnPage*(page-1), numOfTasksOnPage*page));
+    }
 
     function filtering (filterName) {
         switch (filterName) {
             case 'All':
                 currentTasks=allTasks;
-                setFilteredTasks(allTasks);
+                setFilteredTasks(currentTasks);
                 break;
             case 'Done':
                 currentTasks=allTasks.filter((task) => task.completed === true);
-                setFilteredTasks(allTasks.filter((task) => task.completed === true));
+                setFilteredTasks(currentTasks);
                 break;
             case 'Undone':
                 currentTasks=allTasks.filter((task) => task.completed === false)
-                setFilteredTasks(allTasks.filter((task) => task.completed === false));
+                setFilteredTasks(currentTasks);
                 break;
             default:
                 break;
         }
-        setNumberOfPages(Math.trunc((currentTasks.length-1)/5)+1);
+        viewListOnPage(currentTasks);
+        setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
     }
 
     const changeNewTaskText = (e) => {
@@ -50,7 +58,7 @@ export default function App (){
           if (newTaskText.trim() === '') return;
           setTodoId(todoId + 1);
           allTasks.push({text: newTaskText, completed: false, id: todoId, date: new Date()})
-          setAllTasks([...allTasks]);
+          setAllTasks(allTasks);
           filtering(filterName);        
           setNewTaskText('');         
         }
@@ -59,10 +67,11 @@ export default function App (){
     const editTask = (index, e) => {
         if (startEditing) {
             setInitialTask(filteredTasks[index].text);
-            setStartEditing(startEditing);
+            setStartEditing(false);
         }
         filteredTasks[index].text = e.target.value;
-        setFilteredTasks([...filteredTasks]);
+        setFilteredTasks(filteredTasks);
+        viewListOnPage(filteredTasks);
     }
     
     const pressKeyInEditMode = (index, e) => {
@@ -76,28 +85,32 @@ export default function App (){
             setStartEditing(true);
             setInitialTask('');
             document.getElementById(index).blur();
-            setFilteredTasks([...filteredTasks]);
+            viewListOnPage(filteredTasks);
+            setFilteredTasks(filteredTasks);
         }
     }
     
     const removeTask = (removeId,e) => {
         e.preventDefault();
-        setFilteredTasks(filteredTasks.filter(task => task.id !== removeId));
-        setAllTasks(allTasks.filter(task => task.id !== removeId));
         currentTasks=filteredTasks.filter(task => task.id !== removeId);
-        setNumberOfPages(Math.trunc((currentTasks.length-1)/5)+1);
+        setFilteredTasks(currentTasks);
+        setAllTasks(allTasks.filter(task => task.id !== removeId));
+        setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
+        viewListOnPage(currentTasks)
     }
 
     const sortTasksByUpDate = (e) => {
         e.preventDefault();
         filteredTasks.sort((task1, task2) => task2.id - task1.id);
         setFilteredTasks([...filteredTasks]);
+        viewListOnPage(filteredTasks);
     }
 
     const sortTasksByDownDate = (e) => {
         e.preventDefault();
         filteredTasks.sort((task1, task2) => task1.id - task2.id);
         setFilteredTasks([...filteredTasks]);
+        viewListOnPage(filteredTasks);
     }
 
     const changeCheckTask = (task) => {
@@ -109,21 +122,32 @@ export default function App (){
         e.preventDefault();        
         setFilterName('Done');
         filtering('Done');
-        
+        setCurrentPage(1);
     }
       
     const showUndoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Undone');
         filtering('Undone');
-        
+        setCurrentPage(1);
     }
   
     const showAllTasks = (e) => {
         e.preventDefault();
         setFilterName('All');
         filtering('All');
-        
+        setCurrentPage(1);
+    }
+
+    const changePage = (e, numOfPage) => {
+        setCurrentPage(numOfPage);
+        page = numOfPage
+        viewListOnPage(filteredTasks.slice((numOfPage - 1) * numOfTasksOnPage, (numOfTasksOnPage * numOfPage)));
+    }
+
+    const ignor = (e) => {
+        e.preventDefault();
+        viewListOnPage(filteredTasks);
     }
 
     return (
@@ -151,13 +175,19 @@ export default function App (){
             </Grid>
             <TasksList 
                 changeCheckTask = {changeCheckTask}
-                filteredTasks = {filteredTasks}
+                visibleTasks = {visibleTasks}
                 editTask = {editTask}
                 pressKeyInEditMode = {pressKeyInEditMode}
                 removeTask = {removeTask}
             />
             <Grid container justify="center">
-                <Pagination count={numberOfPages} color="secondary" />
+                <Pagination 
+                    count = {numberOfPages} 
+                    color = "secondary"
+                    page = {currentPage}
+                    onChange = {changePage}
+                    onClick = {ignor} 
+                />
             </Grid>
         </Grid>
     );
