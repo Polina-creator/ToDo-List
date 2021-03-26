@@ -104,6 +104,7 @@ export default function App (){
         filteredTasks.sort((task1, task2) => task2.id - task1.id);
         setFilteredTasks([...filteredTasks]);
         viewListOnPage(filteredTasks);
+        setCurrentPage(1);
     }
 
     const sortTasksByDownDate = (e) => {
@@ -111,6 +112,7 @@ export default function App (){
         filteredTasks.sort((task1, task2) => task1.id - task2.id);
         setFilteredTasks([...filteredTasks]);
         viewListOnPage(filteredTasks);
+        setCurrentPage(1);
     }
 
     const changeCheckTask = (task) => {
