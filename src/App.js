@@ -8,8 +8,8 @@ import Grid from "@material-ui/core/Grid"
 import Pagination from '@material-ui/lab/Pagination';
 
 export default function App (){
+    const numOfTasksOnPage = 5;
     let currentTasks = [];
-    let numOfTasksOnPage = 5;
     let page = 1;
     
     const [newTaskText, setNewTaskText] = useState('');
@@ -22,7 +22,7 @@ export default function App (){
     const [numberOfPages, setNumberOfPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [visibleTasks, setVisibleTasks] = useState([]);
-    
+
     function viewListOnPage (array) {
         setVisibleTasks(array.slice(numOfTasksOnPage*(page-1), numOfTasksOnPage*page));
     }
