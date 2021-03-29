@@ -137,6 +137,7 @@ export default function App (){
     const showUndoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Undone');
+        page=1;
         setCurrentPage(1);
         filtering('Undone');
     }
@@ -145,6 +146,7 @@ export default function App (){
         e.preventDefault();
         setFilterName('All');
         setCurrentPage(1);
+        page=1;
         filtering('All');
     }
 
