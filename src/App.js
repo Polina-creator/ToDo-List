@@ -25,7 +25,7 @@ export default function App (){
     const [visibleTasks, setVisibleTasks] = useState([]);
 
     useEffect(()=>{
-        console.log('useEffect', currentPage)
+        console.log('useEffect', currentPage);
     },[currentPage]);
 
     function viewListOnPage (array) {
@@ -50,7 +50,6 @@ export default function App (){
             default:
                 break;
         }
-        //page=1;
         viewListOnPage(currentTasks); 
         setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
     }
@@ -77,7 +76,8 @@ export default function App (){
             setStartEditing(false);
         }
         filteredTasks[index+numOfTasksOnPage*(currentPage-1)].text = e.target.value;
-        setFilteredTasks([...filteredTasks]);
+        setFilteredTasks(filteredTasks);
+        viewListOnPage(filteredTasks);
     }
     
     const pressKeyInEditMode = (index, e) => {
@@ -109,7 +109,6 @@ export default function App (){
         filteredTasks.sort((task1, task2) => task2.id - task1.id);
         setFilteredTasks(filteredTasks);
         viewListOnPage(filteredTasks);
-        setCurrentPage(1);
     }
 
     const sortTasksByDownDate = (e) => {
@@ -117,7 +116,6 @@ export default function App (){
         filteredTasks.sort((task1, task2) => task1.id - task2.id);
         setFilteredTasks(filteredTasks);
         viewListOnPage(filteredTasks);
-        setCurrentPage(1);
     }
 
     const changeCheckTask = (task) => {
@@ -129,14 +127,15 @@ export default function App (){
     const showDoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Done');
+        page=1;
         setCurrentPage(1);
         filtering('Done');
-        
     }
       
     const showUndoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Undone');
+        page=1;
         setCurrentPage(1);
         filtering('Undone');
     }
@@ -144,6 +143,7 @@ export default function App (){
     const showAllTasks = (e) => {
         e.preventDefault();
         setFilterName('All');
+        page=1;
         setCurrentPage(1);
         filtering('All');
     }
