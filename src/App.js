@@ -14,22 +14,25 @@ let page = 1;
 export default function App (){
 
     const [newTaskText, setNewTaskText] = useState('');
-    const [todoId, setTodoId] = useState(0);
     const [allTasks, setAllTasks] = useState([]);
+    const [filteredTasks, setFilteredTasks] = useState([]);
     const [startEditing, setStartEditing]=useState(true);
     const [initialTask, setInitialTask]=useState('');
-    const [filteredTasks, setFilteredTasks] = useState([]);
     const [filterName, setFilterName] = useState('All');
     const [numberOfPages, setNumberOfPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [visibleTasks, setVisibleTasks] = useState([]);
 
     useEffect(()=>{
-        console.log('useEffect', currentPage);
+        //console.log('useEffect', currentPage);
     },[currentPage]);
 
+    useEffect(()=>{
+        //console.log(filteredTasks);
+    },[filteredTasks]);
+
     function viewListOnPage (array) {
-        console.log(currentPage);
+        //console.log({filteredTasks});
         setVisibleTasks(array.slice(numOfTasksOnPage*(page-1), numOfTasksOnPage*page));
     }
 
@@ -62,8 +65,7 @@ export default function App (){
         if (e.keyCode === 13){
           e.preventDefault();
           if (newTaskText.trim() === '') return;
-          setTodoId(todoId + 1);
-          allTasks.push({text: newTaskText, completed: false, id: todoId, date: new Date()})
+          allTasks.push({text: newTaskText, completed: false, id: Date.now(), date: new Date()})
           setAllTasks(allTasks);
           filtering(filterName);        
           setNewTaskText('');         
@@ -101,7 +103,11 @@ export default function App (){
         setFilteredTasks(currentTasks);
         setAllTasks(allTasks.filter(task => task.id !== removeId));
         setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
-        viewListOnPage(currentTasks)
+        if (page!==1 && currentTasks.length <= (page-1)*numOfTasksOnPage){
+            page--;
+            setCurrentPage(page);
+        }
+        viewListOnPage(currentTasks);
     }
 
     const sortTasksByUpDate = (e) => {
