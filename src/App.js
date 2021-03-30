@@ -42,13 +42,13 @@ export default function App (){
             default:
                 break;
         }
-        setFilteredTasks(currentTasks);
-        viewListOnPage(currentTasks); 
+        setFilteredTasks(currentTasks); 
         setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
+        viewListOnPage(currentTasks);
     }
                                   
     const addTaskInList = (e) => {
-        if (e.keyCode === 13){
+        if (e.keyCode === 13) {
           e.preventDefault();
           if (newTaskText.trim() === '') return;
           allTasks.push({text: newTaskText, completed: false, id: Date.now(), date: new Date()})
@@ -69,12 +69,12 @@ export default function App (){
     }
     
     const pressKeyInEditMode = (index, e) => {
-        if (e.keyCode === 13){
+        if (e.keyCode === 13) {
             setStartEditing(true);
             setInitialTask('');
             document.getElementById(index).blur();
         }
-        if (e.keyCode === 27 && initialTask !== ''){
+        if (e.keyCode === 27 && initialTask !== '') {
             filteredTasks[index+numOfTasksOnPage*(currentPage-1)].text=initialTask;
             setStartEditing(true);
             setInitialTask('');
