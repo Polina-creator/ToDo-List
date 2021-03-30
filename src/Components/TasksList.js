@@ -5,10 +5,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Grid from "@material-ui/core/Grid"
 
-export default function TasksList({changeCheckTask, visibleTasks, editTask, pressKeyInEditMode, removeTask}){
+export default function TasksList({changeCheckTask, filteredTasks, editTask, removeTask}){
     return (
         <Grid container justify="center" alignItems="center">
-            {visibleTasks.map((task, index) => (
+            {filteredTasks.map((task, index) => (
                 <Grid container justify="center" key={task.id}>
                     <Checkbox 
                         onClick = {() => changeCheckTask(task)}
@@ -23,8 +23,8 @@ export default function TasksList({changeCheckTask, visibleTasks, editTask, pres
                         type = "text"
                         name = {task.text}
                         value = {task.text} 
-                        onChange = {(e) => editTask(index, e)}
-                        onKeyDown = {(e) => pressKeyInEditMode(index, e)}
+                        //onChange = {(e) => editTask(index, e)}
+                        //onKeyDown = {(e) => pressKeyInEditMode(index, e)}
                     />
                     <TextField
                         size = "small"
