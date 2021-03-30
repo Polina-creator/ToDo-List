@@ -8,8 +8,6 @@ import Grid from "@material-ui/core/Grid"
 import Pagination from '@material-ui/lab/Pagination';
 
 const numOfTasksOnPage = 5;
-let currentTasks = [];
-let page = 1;
 
 export default function App (){
 
@@ -23,42 +21,30 @@ export default function App (){
     const [currentPage, setCurrentPage] = useState(1);
     const [visibleTasks, setVisibleTasks] = useState([]);
 
-    useEffect(()=>{
-        //console.log('useEffect', currentPage);
-    },[currentPage]);
+    useEffect(() => {viewListOnPage(filteredTasks);}, [currentPage]);
 
-    useEffect(()=>{
-        //console.log(filteredTasks);
-    },[filteredTasks]);
-
-    function viewListOnPage (array) {
-        //console.log({filteredTasks});
-        setVisibleTasks(array.slice(numOfTasksOnPage*(page-1), numOfTasksOnPage*page));
+    function viewListOnPage (tasks) {
+        setVisibleTasks(tasks.slice(numOfTasksOnPage*(currentPage-1), numOfTasksOnPage*currentPage));
     }
 
     function filtering (filterName) {
+        let currentTasks = [];
         switch (filterName) {
             case 'All':
                 currentTasks=allTasks;
-                setFilteredTasks(currentTasks);
                 break;
             case 'Done':
                 currentTasks=allTasks.filter((task) => task.completed === true);
-                setFilteredTasks(currentTasks);
                 break;
             case 'Undone':
-                currentTasks=allTasks.filter((task) => task.completed === false)
-                setFilteredTasks(currentTasks);
+                currentTasks=allTasks.filter((task) => task.completed === false);
                 break;
             default:
                 break;
         }
+        setFilteredTasks(currentTasks);
         viewListOnPage(currentTasks); 
         setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
-    }
-
-    const changeNewTaskText = (e) => {
-        setNewTaskText(e.target.value);
     }
                                   
     const addTaskInList = (e) => {
@@ -93,34 +79,30 @@ export default function App (){
             setStartEditing(true);
             setInitialTask('');
             document.getElementById(index).blur();
-            setFilteredTasks([...filteredTasks]);
         }
     }
 
     const removeTask = (removeId,e) => {
         e.preventDefault();
-        currentTasks=filteredTasks.filter(task => task.id !== removeId);
-        setFilteredTasks(currentTasks);
+        let tasksRemoving = filteredTasks.filter(task => task.id !== removeId);
+        setFilteredTasks(tasksRemoving);
         setAllTasks(allTasks.filter(task => task.id !== removeId));
-        setNumberOfPages(Math.trunc((currentTasks.length-1)/numOfTasksOnPage)+1);
-        if (page!==1 && currentTasks.length <= (page-1)*numOfTasksOnPage){
-            page--;
-            setCurrentPage(page);
+        setNumberOfPages(Math.trunc((tasksRemoving.length-1)/numOfTasksOnPage)+1);
+        if (currentPage!==1 && (tasksRemoving.length <= (currentPage-1)*numOfTasksOnPage)){
+            setCurrentPage(currentPage-1);
         }
-        viewListOnPage(currentTasks);
+        viewListOnPage(tasksRemoving);
     }
 
     const sortTasksByUpDate = (e) => {
         e.preventDefault();
-        filteredTasks.sort((task1, task2) => task2.id - task1.id);
-        setFilteredTasks(filteredTasks);
+        setFilteredTasks(filteredTasks.sort((task1, task2) => task2.id - task1.id));
         viewListOnPage(filteredTasks);
     }
 
     const sortTasksByDownDate = (e) => {
         e.preventDefault();
-        filteredTasks.sort((task1, task2) => task1.id - task2.id);
-        setFilteredTasks(filteredTasks);
+        setFilteredTasks(filteredTasks.sort((task1, task2) => task1.id - task2.id));
         viewListOnPage(filteredTasks);
     }
 
@@ -133,7 +115,6 @@ export default function App (){
     const showDoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Done');
-        page=1;
         setCurrentPage(1);
         filtering('Done');
     }
@@ -141,7 +122,6 @@ export default function App (){
     const showUndoneTasks = (e) => {
         e.preventDefault();        
         setFilterName('Undone');
-        page=1;
         setCurrentPage(1);
         filtering('Undone');
     }
@@ -149,19 +129,8 @@ export default function App (){
     const showAllTasks = (e) => {
         e.preventDefault();
         setFilterName('All');
-        page=1;
         setCurrentPage(1);
         filtering('All');
-    }
-
-    const changePage = (e, numOfPage) => {
-        setCurrentPage(numOfPage);
-        page = numOfPage;
-    }
-
-    const ignor = (e) => {
-        e.preventDefault();
-        viewListOnPage(filteredTasks);
     }
 
     return (
@@ -172,7 +141,7 @@ export default function App (){
             <Grid container direction="row" justify="center" alignItems="center">
                 <NewTask 
                     newTaskText = {newTaskText || ''}
-                    changeNewTaskText = {changeNewTaskText}
+                    changeNewTaskText = {(e) => setNewTaskText(e.target.value)}
                     addTaskInList = {addTaskInList}
                 />
             </Grid>
@@ -199,8 +168,7 @@ export default function App (){
                     count = {numberOfPages} 
                     color = "secondary"
                     page = {currentPage}
-                    onChange = {changePage}
-                    onClick = {ignor} 
+                    onChange = {(e, numOfPage) => setCurrentPage(numOfPage)}
                 />
             </Grid>
         </Grid>
