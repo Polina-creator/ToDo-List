@@ -12,6 +12,11 @@ export default function App() {
     setTaskId(taskId + 1);
   }
 
+  const changeCheckTask = (task) => {
+    task.completed =!  task.completed;
+    setAllTasks([...allTasks])
+  }
+
   console.log (allTasks);
     
   return(
@@ -19,7 +24,10 @@ export default function App() {
       <Grid container direction="row" justify="center" alignItems="center">
         <NewTask addTaskInList={addTaskInList}/>
       </Grid>
-      <TasksList allTasks = {allTasks}/>
+      <TasksList 
+        allTasks = {allTasks}
+        changeCheckTask = {changeCheckTask}
+      />
     </Grid>
   );
 }
