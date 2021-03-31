@@ -17,6 +17,10 @@ export default function App() {
     setAllTasks([...allTasks])
   }
 
+  const removeTask = (removeId, e) => {
+    setAllTasks(allTasks.filter(task => task.id !== removeId));
+  }
+
   console.log (allTasks);
     
   return(
@@ -27,6 +31,7 @@ export default function App() {
       <TasksList 
         allTasks = {allTasks}
         changeCheckTask = {changeCheckTask}
+        removeTask = {removeTask}
       />
     </Grid>
   );
