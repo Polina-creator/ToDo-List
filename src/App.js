@@ -6,7 +6,21 @@ import Grid from "@material-ui/core/Grid";
 export default function App() {
   const [allTasks, setAllTasks] = useState([]);
   const [taskId, setTaskId] = useState(0);
-    
+  
+  const handleFilter = (filterName) => {
+    switch (filterName) {
+      case 'Up':
+        allTasks.sort((task1, task2) => task2.id - task1.id);
+        break;
+      case 'Down':
+        allTasks.sort((task1, task2) => task1.id - task2.id);
+        break;
+      default:
+        break;
+    }
+    setAllTasks([...allTasks]);
+  }
+
   const addTaskInList = (newTaskText) => {
     setAllTasks([...allTasks, {id: taskId, text: newTaskText, completed: false, date: new Date()}]);
     setTaskId(taskId + 1);
@@ -32,6 +46,7 @@ export default function App() {
         allTasks = {allTasks}
         changeCheckTask = {changeCheckTask}
         removeTask = {removeTask}
+        handleFilter = {handleFilter}
       />
     </Grid>
   );
