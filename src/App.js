@@ -45,7 +45,7 @@ export default function App() {
       default:
         break;
     }
-    setNumberOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
+    setNumberOfPages(Math.ceil(filterArr.length / numOfTasksOnPage));
     setFilteredTasks([
       ...filterArr.slice(
         (currentPage - 1) * numOfTasksOnPage,
