@@ -4,13 +4,17 @@ import DateSortButtons from "./Components/DateSortButtons";
 import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
+  const numOfTasksOnPage = 5;
   const [allTasks, setAllTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [filter, setFilter] = useState("All");
   const [order, setOrder] = useState("Down");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [numOfPages, setNumOfPages] = useState(1);
 
   useEffect(() => {
     handleFilter();
@@ -35,6 +39,7 @@ export default function App() {
       default:
         break;
     }
+    setNumOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
     setFilteredTasks(filterArr);
   };
 
@@ -42,19 +47,15 @@ export default function App() {
     let orderArr;
     switch (order) {
       case "Up":
-        orderArr = filteredTasks.sort(
-          (task1, task2) => task2.date - task1.date
-        );
+        orderArr = allTasks.sort((task1, task2) => task2.date - task1.date);
         break;
       case "Down":
-        orderArr = filteredTasks.sort(
-          (task1, task2) => task1.date - task2.date
-        );
+        orderArr = allTasks.sort((task1, task2) => task1.date - task2.date);
         break;
       default:
         break;
     }
-    setFilteredTasks([...orderArr]);
+    setAllTasks(orderArr);
   };
 
   const addTaskInList = (newTaskText) => {
@@ -70,7 +71,11 @@ export default function App() {
   };
 
   const removeTask = (removeId) => {
-    setAllTasks(allTasks.filter((task) => task.id !== removeId));
+    let tasksRemoving = allTasks.filter((task) => task.id !== removeId);
+    setAllTasks(tasksRemoving);
+    setNumOfPages(
+      Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
+    );
   };
 
   return (
@@ -92,6 +97,14 @@ export default function App() {
         changeCheckTask={changeCheckTask}
         removeTask={removeTask}
       />
+      <Grid container justify="center">
+        <Pagination
+          count={numOfPages}
+          color="secondary"
+          page={currentPage}
+          //onChange={(e, numOfPage) => setCurrentPage(numOfPage)}
+        />
+      </Grid>
     </Grid>
   );
 }
