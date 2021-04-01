@@ -14,17 +14,14 @@ export default function App() {
   const [filter, setFilter] = useState("All");
   const [order, setOrder] = useState("Down");
   const [currentPage, setCurrentPage] = useState(1);
-  const [numOfPages, setNumOfPages] = useState(1);
+  const [numberOfPages, setNumberOfPages] = useState(1);
 
   useEffect(() => {
     handleFilter();
-  }, [allTasks, filter, order]);
-
-  console.log("render");
+  }, [allTasks, filter, order, currentPage]);
 
   const handleFilter = () => {
     let filterArr;
-    console.log(filter,order)
     switch (filter) {
       case "All":
         filterArr = allTasks;
@@ -48,24 +45,14 @@ export default function App() {
       default:
         break;
     }
-    setNumOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
-    setFilteredTasks([...filterArr]);
+    setNumberOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
+    setFilteredTasks([
+      ...filterArr.slice(
+        (currentPage - 1) * numOfTasksOnPage,
+        (numOfTasksOnPage - 1) * currentPage + 1
+      ),
+    ]);
   };
-
-  // const handleOrder = () => {
-  //   let orderArr;
-  //   switch (order) {
-  //     case "Up":
-  //       orderArr = allTasks.sort((task1, task2) => task2.date - task1.date);
-  //       break;
-  //     case "Down":
-  //       orderArr = allTasks.sort((task1, task2) => task1.date - task2.date);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setAllTasks(orderArr);
-  // };
 
   const addTaskInList = (newTaskText) => {
     setAllTasks([
@@ -82,7 +69,7 @@ export default function App() {
   const removeTask = (removeId) => {
     let tasksRemoving = allTasks.filter((task) => task.id !== removeId);
     setAllTasks(tasksRemoving);
-    setNumOfPages(
+    setNumberOfPages(
       Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
     );
   };
@@ -108,10 +95,10 @@ export default function App() {
       />
       <Grid container justify="center">
         <Pagination
-          count={numOfPages}
+          count={numberOfPages}
           color="secondary"
           page={currentPage}
-          //onChange={(e, numOfPage) => setCurrentPage(numOfPage)}
+          onChange={(e, numOfPage) => setCurrentPage(numOfPage)}
         />
       </Grid>
     </Grid>
