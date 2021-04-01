@@ -4,13 +4,13 @@ import DateSortButtons from "./Components/DateSortButtons";
 import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
   const [allTasks, setAllTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
   const [filter, setFilter] = useState("All");
   const [order, setOrder] = useState("Down");
-  const [filteredTasks, setFilteredTasks] = useState([]);
 
   useEffect(() => {
     handleFilter();
@@ -42,10 +42,14 @@ export default function App() {
     let orderArr;
     switch (order) {
       case "Up":
-        orderArr = filteredTasks.sort((task1, task2) => task2.date - task1.date);
+        orderArr = filteredTasks.sort(
+          (task1, task2) => task2.date - task1.date
+        );
         break;
       case "Down":
-        orderArr = filteredTasks.sort((task1, task2) => task1.date - task2.date);
+        orderArr = filteredTasks.sort(
+          (task1, task2) => task1.date - task2.date
+        );
         break;
       default:
         break;
@@ -65,7 +69,7 @@ export default function App() {
     setAllTasks([...allTasks]);
   };
 
-  const removeTask = (removeId, e) => {
+  const removeTask = (removeId) => {
     setAllTasks(allTasks.filter((task) => task.id !== removeId));
   };
 
@@ -84,7 +88,6 @@ export default function App() {
         <DateSortButtons setOrder={setOrder} />
       </Grid>
       <TasksList
-        //handleFilter={handleFilter()}
         filteredTasks={filteredTasks}
         changeCheckTask={changeCheckTask}
         removeTask={removeTask}

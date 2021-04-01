@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, TextField, Checkbox, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-export default function Task({ task, index, changeCheckTask, removeTask, handleFilter }) {
+export default function Task({ task, changeCheckTask, removeTask }) {
   const [textValue, setTextValue] = useState(task.text);
   const [editable, setEditable] = useState(false);
 
@@ -10,7 +10,6 @@ export default function Task({ task, index, changeCheckTask, removeTask, handleF
     setEditable(true);
     e.target.value = textValue;
   };
-  // handleFilter();
   return (
     <Grid container justify="center">
       <Checkbox
@@ -21,7 +20,7 @@ export default function Task({ task, index, changeCheckTask, removeTask, handleF
       {editable && (
         <TextField
           size="small"
-          variant="outlined"          
+          variant="outlined"
           type="text"
           onFocus={(e) => {
             e.target.value = textValue;
@@ -35,6 +34,9 @@ export default function Task({ task, index, changeCheckTask, removeTask, handleF
               setEditable(false);
               setTextValue(event.target.value);
             }
+            if (event.key === "Escape") {
+              setEditable(false);
+            }
           }}
         />
       )}
@@ -44,7 +46,6 @@ export default function Task({ task, index, changeCheckTask, removeTask, handleF
           size="small"
           variant="outlined"
           onClick={handleEdit}
-          //onBlur={setEditable(false)}          
           type="text"
           value={textValue}
           disabled
