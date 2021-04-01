@@ -3,15 +3,10 @@ import {Grid} from '@material-ui/core';
 import Task from './Task';
 import DateSortButtons from './DateSortButtons';
 
-export default function TasksList({allTasks, changeCheckTask, removeTask, handleFilter}){
+export default function TasksList({filteredTasks, changeCheckTask, removeTask}){
     return (
         <Grid container justify="center" alignItems="center">
-            <Grid container direction="row" justify="center" alignItems="center">
-                <DateSortButtons 
-                    handleFilter={handleFilter} 
-                />          
-            </Grid>
-            {allTasks.map((task, index) => (
+            {filteredTasks.map((task, index) => (
                 <Task
                     key = {task.id} 
                     task = {task} 

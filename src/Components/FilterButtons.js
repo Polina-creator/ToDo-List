@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 
-export default function FilterButtons(props) {
+export default function FilterButtons({handleFilter}) {
   return (
     <>
       <Button
@@ -9,7 +9,7 @@ export default function FilterButtons(props) {
         size="large"
         color="secondary"
         variant="outlined"
-        onClick={props.handleFilter}
+        onClick={({currentTarget}) => handleFilter(currentTarget.id)}
       >
         Done
       </Button>
@@ -18,7 +18,7 @@ export default function FilterButtons(props) {
         size="large"
         color="secondary"
         variant="outlined"
-        onClick={props.handleFilter}
+        onClick={({currentTarget}) => handleFilter(currentTarget.id)}
       >
         All
       </Button>
@@ -27,7 +27,7 @@ export default function FilterButtons(props) {
         size="large"
         color="secondary"
         variant="outlined"
-        onClick={props.handleFilter}
+        onClick={({currentTarget}) => handleFilter(currentTarget.id)}
       >
         Undone
       </Button>
