@@ -4,66 +4,60 @@ import DateSortButtons from "./Components/DateSortButtons";
 import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
-//import Task from './Components/Task';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function App() {
   const [allTasks, setAllTasks] = useState([]);
-  const [taskId, setTaskId] = useState(0);
   const [filter, setFilter] = useState("All");
   const [order, setOrder] = useState("Down");
   const [filteredTasks, setFilteredTasks] = useState([]);
 
-  //const filteredTasks = useMemo();
   useEffect(() => {
     handleFilter();
   }, [allTasks, filter]);
 
   useEffect(() => {
     handleOrder();
-  }, [order])
+  }, [order]);
 
   const handleFilter = () => {
-    let newArray;
+    let filterArr;
     switch (filter) {
       case "All":
-        newArray = allTasks;
+        filterArr = allTasks;
         break;
       case "Done":
-        newArray = allTasks.filter((task) => task.completed);
+        filterArr = allTasks.filter((task) => task.completed);
         break;
       case "Undone":
-        newArray = allTasks.filter((task) => !task.completed);
+        filterArr = allTasks.filter((task) => !task.completed);
         break;
       default:
         break;
     }
-    //console.log(newArray);
-    setFilteredTasks([...newArray]);
+    setFilteredTasks(filterArr);
   };
 
   const handleOrder = () => {
     let orderArr;
     switch (order) {
       case "Up":
-        orderArr = filteredTasks.sort((task1, task2) => task2.id - task1.id);
+        orderArr = filteredTasks.sort((task1, task2) => task2.date - task1.date);
         break;
       case "Down":
-        orderArr = filteredTasks.sort((task1, task2) => task1.id - task2.id);
+        orderArr = filteredTasks.sort((task1, task2) => task1.date - task2.date);
         break;
       default:
         break;
     }
-    console.log (orderArr);
     setFilteredTasks([...orderArr]);
   };
 
   const addTaskInList = (newTaskText) => {
     setAllTasks([
       ...allTasks,
-      { id: taskId, text: newTaskText, completed: false, date: new Date() },
+      { id: uuidv4(), text: newTaskText, completed: false, date: new Date() },
     ]);
-    setTaskId(taskId + 1);
-    //handleFilter();
   };
 
   const changeCheckTask = (task) => {
