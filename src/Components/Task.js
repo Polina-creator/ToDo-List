@@ -48,7 +48,6 @@ export default function Task({ task, changeCheckTask, removeTask }) {
           onClick={handleEdit}
           type="text"
           value={textValue}
-          disabled
         />
       )}
       <TextField

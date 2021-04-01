@@ -85,7 +85,7 @@ export default function App() {
         <NewTask addTaskInList={addTaskInList} />
       </Grid>
       <Grid container direction="row" justify="center" alignItems="center">
-        <FilterButtons setFilter={setFilter} />
+        <FilterButtons setFilter={setFilter} setCurrentPage={setCurrentPage} />
         <DateSortButtons setOrder={setOrder} />
       </Grid>
       <TasksList
