@@ -18,14 +18,13 @@ export default function App() {
 
   useEffect(() => {
     handleFilter();
-  }, [allTasks, filter]);
+  }, [allTasks, filter, order]);
 
-  useEffect(() => {
-    handleOrder();
-  }, [order]);
+  console.log("render");
 
   const handleFilter = () => {
     let filterArr;
+    console.log(filter,order)
     switch (filter) {
       case "All":
         filterArr = allTasks;
@@ -39,24 +38,34 @@ export default function App() {
       default:
         break;
     }
-    setNumOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
-    setFilteredTasks(filterArr);
-  };
-
-  const handleOrder = () => {
-    let orderArr;
     switch (order) {
       case "Up":
-        orderArr = allTasks.sort((task1, task2) => task2.date - task1.date);
+        filterArr = filterArr.sort((task1, task2) => task2.date - task1.date);
         break;
       case "Down":
-        orderArr = allTasks.sort((task1, task2) => task1.date - task2.date);
+        filterArr = filterArr.sort((task1, task2) => task1.date - task2.date);
         break;
       default:
         break;
     }
-    setAllTasks(orderArr);
+    setNumOfPages(Math.trunc((filterArr.length - 1) / numOfTasksOnPage) + 1);
+    setFilteredTasks([...filterArr]);
   };
+
+  // const handleOrder = () => {
+  //   let orderArr;
+  //   switch (order) {
+  //     case "Up":
+  //       orderArr = allTasks.sort((task1, task2) => task2.date - task1.date);
+  //       break;
+  //     case "Down":
+  //       orderArr = allTasks.sort((task1, task2) => task1.date - task2.date);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setAllTasks(orderArr);
+  // };
 
   const addTaskInList = (newTaskText) => {
     setAllTasks([
