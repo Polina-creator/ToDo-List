@@ -49,7 +49,7 @@ export default function App() {
     setFilteredTasks([
       ...filterArr.slice(
         (currentPage - 1) * numOfTasksOnPage,
-        (numOfTasksOnPage - 1) * currentPage + 1
+        currentPage * numOfTasksOnPage 
       ),
     ]);
   };
