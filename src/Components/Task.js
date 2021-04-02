@@ -3,7 +3,7 @@ import { Grid, TextField, Checkbox, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 export default function Task({ task, changeCheckTask, removeTask }) {
-  const [textValue, setTextValue] = useState(task.text);
+  const [textValue, setTextValue] = useState(task.name);
   const [editable, setEditable] = useState(false);
 
   const handleEdit = (e) => {
@@ -15,7 +15,7 @@ export default function Task({ task, changeCheckTask, removeTask }) {
       <Checkbox
         inputProps={{ "aria-label": "primary checkbox" }}
         onClick={() => changeCheckTask(task)}
-        checked={task.completed}
+        checked={task.done}
       />
       {editable && (
         <TextField
@@ -55,10 +55,10 @@ export default function Task({ task, changeCheckTask, removeTask }) {
         variant="outlined"
         type="text"
         disabled
-        value={task.date.toLocaleString()}
+        value={task.createdAt.toLocaleString()}
       />
       <IconButton
-        onClick={(event) => removeTask(task.id, event)}
+        onClick={(event) => removeTask(task.uuid, event)}
         aria-label="delete"
       >
         <DeleteIcon color="secondary" />

@@ -11,9 +11,9 @@ export default function TasksList({
     <Grid container justify="center" alignItems="center">
       {filteredTasks.map((task) => (
         <Task
-          key={task.id}
+          key={task.uuid}
           task={task}
-          index={task.id}
+          index={task.uuid}
           changeCheckTask={changeCheckTask}
           removeTask={removeTask}
         />

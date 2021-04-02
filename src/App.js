@@ -6,6 +6,7 @@ import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 export default function App() {
   const numOfTasksOnPage = 5;
@@ -18,7 +19,25 @@ export default function App() {
 
   useEffect(() => {
     handleFilter();
+    console.log(allTasks);
   }, [allTasks, filter, order, currentPage]);
+
+  const url = "https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc";
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const getTodos = () => {
+    axios
+      .get(url)
+      .then((response) => {
+        const todos = response.data;
+        //console.log(todos);
+        setAllTasks(todos);
+      })
+      .catch((error) => console.error(`Error: ${error}`));
+  };
 
   const handleFilter = () => {
     let filterArr;
@@ -27,20 +46,20 @@ export default function App() {
         filterArr = allTasks;
         break;
       case "Done":
-        filterArr = allTasks.filter((task) => task.completed);
+        filterArr = allTasks.filter((task) => task.done);
         break;
       case "Undone":
-        filterArr = allTasks.filter((task) => !task.completed);
+        filterArr = allTasks.filter((task) => !task.done);
         break;
       default:
         break;
     }
     switch (order) {
       case "Up":
-        filterArr = filterArr.sort((task1, task2) => task2.date - task1.date);
+        filterArr = filterArr.sort((task1, task2) => task2.createdAt - task1.createdAt);
         break;
       case "Down":
-        filterArr = filterArr.sort((task1, task2) => task1.date - task2.date);
+        filterArr = filterArr.sort((task1, task2) => task1.createdAt - task2.createdAt);
         break;
       default:
         break;
@@ -49,7 +68,7 @@ export default function App() {
     setFilteredTasks([
       ...filterArr.slice(
         (currentPage - 1) * numOfTasksOnPage,
-        currentPage * numOfTasksOnPage 
+        currentPage * numOfTasksOnPage
       ),
     ]);
   };
@@ -57,17 +76,17 @@ export default function App() {
   const addTaskInList = (newTaskText) => {
     setAllTasks([
       ...allTasks,
-      { id: uuidv4(), text: newTaskText, completed: false, date: new Date() },
+      { uuid: uuidv4(), name: newTaskText, done: false, createdAt: new Date() },
     ]);
   };
 
   const changeCheckTask = (task) => {
-    task.completed = !task.completed;
+    task.done = !task.done;
     setAllTasks([...allTasks]);
   };
 
   const removeTask = (removeId) => {
-    let tasksRemoving = allTasks.filter((task) => task.id !== removeId);
+    let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
     setAllTasks(tasksRemoving);
     setNumberOfPages(
       Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
