@@ -19,7 +19,6 @@ export default function App() {
 
   useEffect(() => {
     handleFilter();
-    console.log(allTasks);
   }, [allTasks, filter, order, currentPage]);
 
   const url = "https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc";
@@ -33,7 +32,6 @@ export default function App() {
       .get(url)
       .then((response) => {
         const todos = response.data;
-        //console.log(todos);
         setAllTasks(todos);
       })
       .catch((error) => console.error(`Error: ${error}`));
