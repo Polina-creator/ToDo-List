@@ -21,7 +21,8 @@ export default function App() {
     handleFilter();
   }, [allTasks, filter, order, currentPage]);
 
-  const url = "https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc";
+  const get_url = "https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc";
+  const post_url = "https://todo-api-learning.herokuapp.com/v1/task/5";
 
   useEffect(() => {
     getTodos();
@@ -29,12 +30,25 @@ export default function App() {
 
   const getTodos = () => {
     axios
-      .get(url)
+      .get(get_url)
       .then((response) => {
         const todos = response.data;
         setAllTasks(todos);
       })
       .catch((error) => console.error(`Error: ${error}`));
+  };
+
+  const postTodos = () => {
+    axios
+      .post(post_url, {
+        name: newTaskText,
+        done: false
+      })
+      .then((response) =>{
+        console.log(response);
+      }, (error) => {
+        console.log(error)
+      })
   };
 
   const handleFilter = () => {
