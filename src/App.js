@@ -21,35 +21,38 @@ export default function App() {
     handleFilter();
   }, [allTasks, filter, order, currentPage]);
 
-  const get_url = "https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc";
-  const post_url = "https://todo-api-learning.herokuapp.com/v1/task/5";
+  const url = "https://todo-api-learning.herokuapp.com/v1/tasks/5";
 
-  useEffect(() => {
-    getTodos();
+  //get tasks from server
+  useEffect(() =>{
+    async  function getTasks (){
+      const response = await axios.get(url);
+      if (response.status === 200){
+        setAllTasks(response.data)
+      }
+    } 
+    getTasks()
   }, []);
 
-  const getTodos = () => {
-    axios
-      .get(get_url)
-      .then((response) => {
-        const todos = response.data;
-        setAllTasks(todos);
-      })
-      .catch((error) => console.error(`Error: ${error}`));
-  };
+  async function addTaskInList (newTaskText){
+    console.log(newTaskText);
+    const response = await axios.post(url, {name: 'newTaskText', done: true})
+    console.log(response.data);
+    // if (response.status === 200){
+    //   setAllTasks([
+    //     ...allTasks,
+    //     {...response.data}
+    //   ])
+    // }
+  }
 
-  const postTodos = () => {
-    axios
-      .post(post_url, {
-        name: newTaskText,
-        done: false
-      })
-      .then((response) =>{
-        console.log(response);
-      }, (error) => {
-        console.log(error)
-      })
-  };
+
+  // const addTaskInList = (newTaskText) => {
+  //   setAllTasks([
+  //     ...allTasks,
+  //     { uuid: uuidv4(), name: newTaskText, done: false, createdAt: new Date() },
+  //   ]);
+  // };
 
   const handleFilter = () => {
     let filterArr;
@@ -85,12 +88,7 @@ export default function App() {
     ]);
   };
 
-  const addTaskInList = (newTaskText) => {
-    setAllTasks([
-      ...allTasks,
-      { uuid: uuidv4(), name: newTaskText, done: false, createdAt: new Date() },
-    ]);
-  };
+ 
 
   const changeCheckTask = (task) => {
     task.done = !task.done;
