@@ -28,7 +28,7 @@ export default function App() {
       const response = await axios.get(url + "tasks/5");
       if (response.status === 200) {
         setAllTasks(response.data);
-      }
+      } else alert(response.message);
     }
     getTasks();
   }, []);
@@ -46,7 +46,7 @@ export default function App() {
 
   async function removeTask(removeId) {
     const response = await axios.delete(url + "task/5/" + removeId);
-    if (response.status === 200) {
+    if (response.status === 204) {
       let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
       setAllTasks(tasksRemoving);
       setNumberOfPages(
@@ -55,20 +55,15 @@ export default function App() {
     }
   }
 
-  async function changeCheckTask (task) {
-    const response = await axios.patch(url+'task/5/'+task.uuid, {done: !task.done})
-    if (response.status === 200){
+  async function changeCheckTask(task) {
+    const response = await axios.patch(url + "task/5/" + task.uuid, {
+      done: !task.done,
+    });
+    if (response.status === 200) {
       task.done = !task.done;
       setAllTasks([...allTasks]);
-    }
-  };
-
-  // const changeCheckTask = (task) => {
-  //   task.done = !task.done;
-  //   setAllTasks([...allTasks]);
-  // };
-
-  //async function handleFilter() {}
+    } 
+  }
 
   const handleFilter = () => {
     let filterArr;
