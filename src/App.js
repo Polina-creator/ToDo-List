@@ -23,45 +23,52 @@ export default function App() {
 
   const url = "https://todo-api-learning.herokuapp.com/v1/";
 
-  //get tasks from server
-  useEffect(() =>{
-    async  function getTasks (){
-      const response = await axios.get(url+'tasks/5');
-      if (response.status === 200){
-        setAllTasks(response.data)
+  useEffect(() => {
+    async function getTasks() {
+      const response = await axios.get(url + "tasks/5");
+      if (response.status === 200) {
+        setAllTasks(response.data);
       }
-    } 
-    getTasks()
+    }
+    getTasks();
   }, []);
 
-  async function addTaskInList (newTaskText){
+  async function addTaskInList(newTaskText) {
     console.log(newTaskText);
-    const response = await axios.post(url+'task/5', {name: newTaskText, done: false});
-    if (response.status === 200){
-      setAllTasks([
-        ...allTasks,
-        {...response.data}
-      ])
+    const response = await axios.post(url + "task/5", {
+      name: newTaskText,
+      done: false,
+    });
+    if (response.status === 200) {
+      setAllTasks([...allTasks, { ...response.data }]);
     }
   }
 
-  async  function removeTask (removeId){
-    const response = await axios.delete(url+'task/5/'+removeId);
-    let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
-    setAllTasks(tasksRemoving);
-    setNumberOfPages(
-      Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
-    );
+  async function removeTask(removeId) {
+    const response = await axios.delete(url + "task/5/" + removeId);
+    if (response.status === 200) {
+      let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
+      setAllTasks(tasksRemoving);
+      setNumberOfPages(
+        Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
+      );
+    }
   }
 
-  
+  async function changeCheckTask (task) {
+    const response = await axios.patch(url+'task/5/'+task.uuid, {done: !task.done})
+    if (response.status === 200){
+      task.done = !task.done;
+      setAllTasks([...allTasks]);
+    }
+  };
 
-  // const addTaskInList = (newTaskText) => {
-  //   setAllTasks([
-  //     ...allTasks,
-  //     { uuid: uuidv4(), name: newTaskText, done: false, createdAt: new Date() },
-  //   ]);
+  // const changeCheckTask = (task) => {
+  //   task.done = !task.done;
+  //   setAllTasks([...allTasks]);
   // };
+
+  //async function handleFilter() {}
 
   const handleFilter = () => {
     let filterArr;
@@ -80,10 +87,14 @@ export default function App() {
     }
     switch (order) {
       case "Up":
-        filterArr = filterArr.sort((task1, task2) => task2.createdAt - task1.createdAt);
+        filterArr = filterArr.sort(
+          (task1, task2) => task2.createdAt - task1.createdAt
+        );
         break;
       case "Down":
-        filterArr = filterArr.sort((task1, task2) => task1.createdAt - task2.createdAt);
+        filterArr = filterArr.sort(
+          (task1, task2) => task1.createdAt - task2.createdAt
+        );
         break;
       default:
         break;
@@ -96,14 +107,6 @@ export default function App() {
       ),
     ]);
   };
-
- 
-
-  const changeCheckTask = (task) => {
-    task.done = !task.done;
-    setAllTasks([...allTasks]);
-  };
-
 
   return (
     <Grid>
