@@ -40,7 +40,7 @@ export default function App() {
     });
     if (response.status === 200) {
       setAllTasks([...allTasks, { ...response.data }]);
-    }
+    } else alert(response.message);
   }
 
   async function removeTask(removeId) {
@@ -48,10 +48,12 @@ export default function App() {
     if (response.status === 204) {
       let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
       setAllTasks(tasksRemoving);
-      setNumberOfPages(
-        Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
-      );
-    }
+      const pages=Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
+      setNumberOfPages(pages);
+      if (currentPage>pages){
+        setCurrentPage(currentPage-1);
+      }
+    } else alert(response.message);
   }
 
   async function changeCheckTask(task) {
@@ -61,25 +63,21 @@ export default function App() {
     if (response.status === 200) {
       task.done = !task.done;
       setAllTasks([...allTasks]);
-    }
+    } else alert(response.message);
   }
 
   async function handleFilter() {
     let response;
-    if (filter === "" && order === "") {
+    if (filter === "" && order === "")
       response = await axios.get(url + "tasks/5");
-    }
-    if (filter === "") {
+    if (filter === "")
       response = await axios.get(url + "tasks/5?order=" + order);
-    }
-    if (order === "") {
+    if (order === "")
       response = await axios.get(url + "tasks/5?filterBy=" + filter);
-    } else {
+    else
       response = await axios.get(
         url + "tasks/5?filterBy=" + filter + "&order=" + order
       );
-    }
-
     if (response.status === 200) {
       setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
       setFilteredTasks([
@@ -90,8 +88,6 @@ export default function App() {
       ]);
     } else alert(response.message);
   }
-
-  
 
   return (
     <Grid>
