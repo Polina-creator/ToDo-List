@@ -67,7 +67,7 @@ export default function Task({ task, changeCheckTask, removeTask }) {
         variant="outlined"
         type="text"
         disabled
-        value={task.createdAt.toLocaleString()}
+        value={task.createdAt.split('T').join(' ').slice(0,-1)}
       />
       <IconButton onClick={() => removeTask(task.uuid)} aria-label="delete">
         <DeleteIcon color="secondary" />
