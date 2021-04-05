@@ -33,7 +33,6 @@ export default function App() {
   }, []);
 
   async function addTaskInList(newTaskText) {
-    console.log(newTaskText);
     const response = await axios.post(url + "task/5", {
       name: newTaskText,
       done: false,
@@ -48,10 +47,11 @@ export default function App() {
     if (response.status === 204) {
       let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
       setAllTasks(tasksRemoving);
-      const pages=Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
+      const pages =
+        Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
       setNumberOfPages(pages);
-      if (currentPage>pages){
-        setCurrentPage(currentPage-1);
+      if (currentPage > pages) {
+        setCurrentPage(currentPage - 1);
       }
     } else alert(response.message);
   }
