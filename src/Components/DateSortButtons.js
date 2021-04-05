@@ -11,13 +11,13 @@ export default function DateSortButtons({ setOrder }) {
         Sort by Date
       </Box>
       <IconButton
-        id="Up"
+        id="asc"
         onClick={({ currentTarget }) => setOrder(currentTarget.id)}
       >
         <ArrowUpwardIcon color="secondary" fontSize="large" />
       </IconButton>
       <IconButton
-        id="Down"
+        id="desc"
         onClick={({ currentTarget }) => setOrder(currentTarget.id)}
       >
         <ArrowDownwardIcon color="secondary" fontSize="large" />

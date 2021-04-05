@@ -13,12 +13,14 @@ export default function Task({ task, changeCheckTask, removeTask }) {
   };
 
   async function saveNewText(newText) {
-    setEditable(false);
-    setTextValue(newText);
     const response = await axios.patch(
       "https://todo-api-learning.herokuapp.com/v1/task/5/" + task.uuid,
       { name: newText }
     );
+    if (response.status === 200){
+      setEditable(false);
+      setTextValue(newText);
+    }else alert (response.message);
   }
 
   return (

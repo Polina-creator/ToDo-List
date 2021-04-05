@@ -5,7 +5,6 @@ import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 export default function App() {
@@ -92,43 +91,7 @@ export default function App() {
     } else alert(response.message);
   }
 
-  // const handleFilter = () => {
-  //   let filterArr;
-  //   switch (filter) {
-  //     case "All":
-  //       filterArr = allTasks;
-  //       break;
-  //     case "Done":
-  //       filterArr = allTasks.filter((task) => task.done);
-  //       break;
-  //     case "Undone":
-  //       filterArr = allTasks.filter((task) => !task.done);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   switch (order) {
-  //     case "Up":
-  //       filterArr = filterArr.sort(
-  //         (task1, task2) => task2.createdAt - task1.createdAt
-  //       );
-  //       break;
-  //     case "Down":
-  //       filterArr = filterArr.sort(
-  //         (task1, task2) => task1.createdAt - task2.createdAt
-  //       );
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setNumberOfPages(Math.ceil(filterArr.length / numOfTasksOnPage));
-  //   setFilteredTasks([
-  //     ...filterArr.slice(
-  //       (currentPage - 1) * numOfTasksOnPage,
-  //       currentPage * numOfTasksOnPage
-  //     ),
-  //   ]);
-  // };
+  
 
   return (
     <Grid>
