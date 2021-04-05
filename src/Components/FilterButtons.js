@@ -5,7 +5,7 @@ export default function FilterButtons({ setFilter, setCurrentPage }) {
   return (
     <>
       <Button
-        id="Done"
+        id="done"
         size="large"
         color="secondary"
         variant="outlined"
@@ -17,19 +17,18 @@ export default function FilterButtons({ setFilter, setCurrentPage }) {
         Done
       </Button>
       <Button
-        id="All"
         size="large"
         color="secondary"
         variant="outlined"
-        onClick={({ currentTarget }) => {
-          setFilter(currentTarget.id);
+        onClick={() => {
+          setFilter('');
           setCurrentPage(1);
         }}
       >
         All
       </Button>
       <Button
-        id="Undone"
+        id="undone"
         size="large"
         color="secondary"
         variant="outlined"

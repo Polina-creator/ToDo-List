@@ -12,8 +12,8 @@ export default function App() {
   const numOfTasksOnPage = 5;
   const [allTasks, setAllTasks] = useState([]);
   const [filteredTasks, setFilteredTasks] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const [order, setOrder] = useState("Down");
+  const [filter, setFilter] = useState("");
+  const [order, setOrder] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(1);
 
@@ -62,46 +62,73 @@ export default function App() {
     if (response.status === 200) {
       task.done = !task.done;
       setAllTasks([...allTasks]);
-    } 
+    }
   }
 
-  const handleFilter = () => {
-    let filterArr;
-    switch (filter) {
-      case "All":
-        filterArr = allTasks;
-        break;
-      case "Done":
-        filterArr = allTasks.filter((task) => task.done);
-        break;
-      case "Undone":
-        filterArr = allTasks.filter((task) => !task.done);
-        break;
-      default:
-        break;
+  async function handleFilter() {
+    let response;
+    if (filter === "" && order === "") {
+      response = await axios.get(url + "tasks/5");
     }
-    switch (order) {
-      case "Up":
-        filterArr = filterArr.sort(
-          (task1, task2) => task2.createdAt - task1.createdAt
-        );
-        break;
-      case "Down":
-        filterArr = filterArr.sort(
-          (task1, task2) => task1.createdAt - task2.createdAt
-        );
-        break;
-      default:
-        break;
+    if (filter === "") {
+      response = await axios.get(url + "tasks/5?order=" + order);
     }
-    setNumberOfPages(Math.ceil(filterArr.length / numOfTasksOnPage));
-    setFilteredTasks([
-      ...filterArr.slice(
-        (currentPage - 1) * numOfTasksOnPage,
-        currentPage * numOfTasksOnPage
-      ),
-    ]);
-  };
+    if (order === "") {
+      response = await axios.get(url + "tasks/5?filterBy=" + filter);
+    } else {
+      response = await axios.get(
+        url + "tasks/5?filterBy=" + filter + "&order=" + order
+      );
+    }
+
+    if (response.status === 200) {
+      setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
+      setFilteredTasks([
+        ...response.data.slice(
+          (currentPage - 1) * numOfTasksOnPage,
+          currentPage * numOfTasksOnPage
+        ),
+      ]);
+    } else alert(response.message);
+  }
+
+  // const handleFilter = () => {
+  //   let filterArr;
+  //   switch (filter) {
+  //     case "All":
+  //       filterArr = allTasks;
+  //       break;
+  //     case "Done":
+  //       filterArr = allTasks.filter((task) => task.done);
+  //       break;
+  //     case "Undone":
+  //       filterArr = allTasks.filter((task) => !task.done);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   switch (order) {
+  //     case "Up":
+  //       filterArr = filterArr.sort(
+  //         (task1, task2) => task2.createdAt - task1.createdAt
+  //       );
+  //       break;
+  //     case "Down":
+  //       filterArr = filterArr.sort(
+  //         (task1, task2) => task1.createdAt - task2.createdAt
+  //       );
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setNumberOfPages(Math.ceil(filterArr.length / numOfTasksOnPage));
+  //   setFilteredTasks([
+  //     ...filterArr.slice(
+  //       (currentPage - 1) * numOfTasksOnPage,
+  //       currentPage * numOfTasksOnPage
+  //     ),
+  //   ]);
+  // };
 
   return (
     <Grid>
