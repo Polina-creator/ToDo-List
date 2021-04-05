@@ -21,12 +21,12 @@ export default function App() {
     handleFilter();
   }, [allTasks, filter, order, currentPage]);
 
-  const url = "https://todo-api-learning.herokuapp.com/v1/tasks/5";
+  const url = "https://todo-api-learning.herokuapp.com/v1/";
 
   //get tasks from server
   useEffect(() =>{
     async  function getTasks (){
-      const response = await axios.get(url);
+      const response = await axios.get(url+'tasks/5');
       if (response.status === 200){
         setAllTasks(response.data)
       }
@@ -36,16 +36,25 @@ export default function App() {
 
   async function addTaskInList (newTaskText){
     console.log(newTaskText);
-    const response = await axios.post(url, {name: 'newTaskText', done: true})
-    console.log(response.data);
-    // if (response.status === 200){
-    //   setAllTasks([
-    //     ...allTasks,
-    //     {...response.data}
-    //   ])
-    // }
+    const response = await axios.post(url+'task/5', {name: newTaskText, done: false});
+    if (response.status === 200){
+      setAllTasks([
+        ...allTasks,
+        {...response.data}
+      ])
+    }
   }
 
+  async  function removeTask (removeId){
+    const response = await axios.delete(url+'task/5/'+removeId);
+    let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
+    setAllTasks(tasksRemoving);
+    setNumberOfPages(
+      Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
+    );
+  }
+
+  
 
   // const addTaskInList = (newTaskText) => {
   //   setAllTasks([
@@ -95,13 +104,6 @@ export default function App() {
     setAllTasks([...allTasks]);
   };
 
-  const removeTask = (removeId) => {
-    let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
-    setAllTasks(tasksRemoving);
-    setNumberOfPages(
-      Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1
-    );
-  };
 
   return (
     <Grid>

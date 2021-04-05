@@ -3,7 +3,7 @@ import Input from "@material-ui/core/Input";
 
 export default function NewTask({ addTaskInList }) {
   const creatNewTaskText = (e) => {
-    if (e.key === "Enter" && e.target.value !== "") {
+    if (e.key === "Enter" && e.target.value.length >= 1) {
       addTaskInList(e.target.value);
       e.target.value = "";
     }
