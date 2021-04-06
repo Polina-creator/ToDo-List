@@ -5,7 +5,7 @@ import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
 import { Grid, Box } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import axios from "axios";
+import axios from "./Axios/AxiosIntercept";
 
 export default function App() {
   const numOfTasksOnPage = 5;
@@ -15,19 +15,16 @@ export default function App() {
   const [order, setOrder] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(1);
+  const url = "https://todo-api-learning.herokuapp.com/v1/";
 
   useEffect(() => {
     handleFilter();
   }, [allTasks, filter, order, currentPage]);
 
-  const url = "https://todo-api-learning.herokuapp.com/v1/";
-
   useEffect(() => {
     async function getTasks() {
       const response = await axios.get(url + "tasks/5");
-      if (response.status === 200) {
-        setAllTasks(response.data);
-      } else alert(response.message);
+      setAllTasks(response.data);
     }
     getTasks();
   }, []);
@@ -37,33 +34,26 @@ export default function App() {
       name: newTaskText,
       done: false,
     });
-    if (response.status === 200) {
-      setAllTasks([...allTasks, { ...response.data }]);
-    } else alert(response.message);
+    setAllTasks([...allTasks, { ...response.data }]);
   }
 
   async function removeTask(removeId) {
     const response = await axios.delete(url + "task/5/" + removeId);
-    if (response.status === 204) {
-      let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
-      setAllTasks(tasksRemoving);
-      const pages =
-        Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
-      setNumberOfPages(pages);
-      if (currentPage > pages) {
-        setCurrentPage(currentPage - 1);
-      }
-    } else alert(response.message);
+    let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
+    setAllTasks(tasksRemoving);
+    const pages = Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
+    setNumberOfPages(pages);
+    if (currentPage > pages) {
+      setCurrentPage(currentPage - 1);
+    }
   }
 
   async function changeCheckTask(task) {
     const response = await axios.patch(url + "task/5/" + task.uuid, {
       done: !task.done,
     });
-    if (response.status === 200) {
-      task.done = !task.done;
-      setAllTasks([...allTasks]);
-    } else alert(response.message);
+    task.done = !task.done;
+    setAllTasks([...allTasks]);
   }
 
   async function handleFilter() {
@@ -78,15 +68,13 @@ export default function App() {
       response = await axios.get(
         url + "tasks/5?filterBy=" + filter + "&order=" + order
       );
-    if (response.status === 200) {
-      setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
-      setFilteredTasks([
-        ...response.data.slice(
-          (currentPage - 1) * numOfTasksOnPage,
-          currentPage * numOfTasksOnPage
-        ),
-      ]);
-    } else alert(response.message);
+    setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
+    setFilteredTasks([
+      ...response.data.slice(
+        (currentPage - 1) * numOfTasksOnPage,
+        currentPage * numOfTasksOnPage
+      ),
+    ]);
   }
 
   return (
