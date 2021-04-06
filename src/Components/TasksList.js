@@ -5,7 +5,8 @@ import Task from "./Task";
 export default function TasksList({
   filteredTasks,
   changeCheckTask,
-  removeTask
+  removeTask,
+  saveNewText,
 }) {
   return (
     <Grid container justify="center" alignItems="center">
@@ -16,6 +17,7 @@ export default function TasksList({
           index={task.uuid}
           changeCheckTask={changeCheckTask}
           removeTask={removeTask}
+          saveNewText={saveNewText}
         />
       ))}
     </Grid>

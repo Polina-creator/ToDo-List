@@ -8,11 +8,10 @@ const customAxios = axios.create({
 customAxios.interceptors.response.use(
   (response) => {
     if (!(response.status === 200 || response.status === 204)) {
-      return alert(response.message);
+      return response.message;
     } else return response;
   },
   (error) => {
-    alert(error);
     return error;
   }
 );

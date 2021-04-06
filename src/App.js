@@ -3,6 +3,7 @@ import NewTask from "./Components/NewTask";
 import DateSortButtons from "./Components/DateSortButtons";
 import FilterButtons from "./Components/FilterButtons";
 import TasksList from "./Components/TasksList";
+import ErrorSnackbar from "./Axios/ErrorSnackbar";
 import { Grid, Box } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import axios from "./Axios/AxiosIntercept";
@@ -15,6 +16,7 @@ export default function App() {
   const [order, setOrder] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(1);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     handleFilter();
@@ -34,10 +36,11 @@ export default function App() {
       done: false,
     });
     setAllTasks([...allTasks, { ...response.data }]);
+    setError(response.message);
   }
 
   async function removeTask(removeId) {
-    await axios.delete("task/5/" + removeId);
+    const response=await axios.delete("task/5/" + removeId);
     let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
     setAllTasks(tasksRemoving);
     const pages = Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
@@ -45,14 +48,23 @@ export default function App() {
     if (currentPage > pages) {
       setCurrentPage(currentPage - 1);
     }
+    setError(response.message);
+  }
+
+  async function saveNewText(newText,task) {
+    const response=await axios.patch("task/5/" + task.uuid, {
+      name: newText,
+    });
+    setError(response.message);
   }
 
   async function changeCheckTask(task) {
-    await axios.patch("task/5/" + task.uuid, {
+    const response = await axios.patch("task/5/" + task.uuid, {
       done: !task.done,
     });
     task.done = !task.done;
     setAllTasks([...allTasks]);
+    setError(response.message);
   }
 
   async function handleFilter() {
@@ -84,6 +96,7 @@ export default function App() {
         filteredTasks={filteredTasks}
         changeCheckTask={changeCheckTask}
         removeTask={removeTask}
+        saveNewText={saveNewText}
       />
       <Grid container justify="center">
         <Pagination
@@ -93,6 +106,7 @@ export default function App() {
           onChange={(e, numOfPage) => setCurrentPage(numOfPage)}
         />
       </Grid>
+      <ErrorSnackbar message={error}/>
     </Grid>
   );
 }

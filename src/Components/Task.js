@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Grid, TextField, Checkbox, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import axios from "./Axios/AxiosIntercept";
 
-export default function Task({ task, changeCheckTask, removeTask }) {
+export default function Task({
+  task,
+  changeCheckTask,
+  removeTask,
+  saveNewText,
+}) {
   const [textValue, setTextValue] = useState(task.name);
   const [editable, setEditable] = useState(false);
 
@@ -11,14 +15,6 @@ export default function Task({ task, changeCheckTask, removeTask }) {
     setEditable(true);
     e.target.value = textValue;
   };
-
-  async function saveNewText(newText) {
-    const response = await axios.patch("task/5/" + task.uuid, {
-      name: newText,
-    });
-    setEditable(false);
-    setTextValue(newText);
-  }
 
   return (
     <Grid container justify="center">
@@ -41,7 +37,9 @@ export default function Task({ task, changeCheckTask, removeTask }) {
           autoFocus
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              saveNewText(event.target.value);
+              saveNewText(event.target.value, task);
+              setEditable(false);
+              setTextValue(event.target.value);
             }
             if (event.key === "Escape") {
               setEditable(false);
