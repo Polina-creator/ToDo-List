@@ -57,8 +57,8 @@ export default function App() {
 
   async function handleFilter() {
     let url;
-    //if (filter === "" && order === "") url = "tasks/5";
-    if (filter === "") url = "tasks/5?order=" + order;
+    if (filter === "" && order === "") url = "tasks/5";
+    else if (filter === "") url = "tasks/5?order=" + order;
     else if (order === "") url = "tasks/5?filterBy=" + filter;
     else url = "tasks/5?filterBy=" + filter + "&order=" + order;
     const response = await axios.get(url);
