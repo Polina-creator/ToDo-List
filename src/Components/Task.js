@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, TextField, Checkbox, IconButton } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import axios from "axios";
+import axios from "./Axios/AxiosIntercept";
 
 export default function Task({ task, changeCheckTask, removeTask }) {
   const [textValue, setTextValue] = useState(task.name);
@@ -13,14 +13,11 @@ export default function Task({ task, changeCheckTask, removeTask }) {
   };
 
   async function saveNewText(newText) {
-    const response = await axios.patch(
-      "https://todo-api-learning.herokuapp.com/v1/task/5/" + task.uuid,
-      { name: newText }
-    );
-    if (response.status === 200){
-      setEditable(false);
-      setTextValue(newText);
-    }else alert (response.message);
+    const response = await axios.patch("task/5/" + task.uuid, {
+      name: newText,
+    });
+    setEditable(false);
+    setTextValue(newText);
   }
 
   return (
@@ -67,7 +64,7 @@ export default function Task({ task, changeCheckTask, removeTask }) {
         variant="outlined"
         type="text"
         disabled
-        value={task.createdAt.split('T').join(' ').slice(0,-1)}
+        value={task.createdAt.split("T").join(" ").slice(0, -1)}
       />
       <IconButton onClick={() => removeTask(task.uuid)} aria-label="delete">
         <DeleteIcon color="secondary" />
