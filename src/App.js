@@ -15,7 +15,6 @@ export default function App() {
   const [order, setOrder] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfPages, setNumberOfPages] = useState(1);
-  const url = "https://todo-api-learning.herokuapp.com/v1/";
 
   useEffect(() => {
     handleFilter();
@@ -23,14 +22,14 @@ export default function App() {
 
   useEffect(() => {
     async function getTasks() {
-      const response = await axios.get(url + "tasks/5");
+      const response = await axios.get("tasks/5");
       setAllTasks(response.data);
     }
     getTasks();
   }, []);
 
   async function addTaskInList(newTaskText) {
-    const response = await axios.post(url + "task/5", {
+    const response = await axios.post("task/5", {
       name: newTaskText,
       done: false,
     });
@@ -38,7 +37,7 @@ export default function App() {
   }
 
   async function removeTask(removeId) {
-    const response = await axios.delete(url + "task/5/" + removeId);
+    await axios.delete("task/5/" + removeId);
     let tasksRemoving = allTasks.filter((task) => task.uuid !== removeId);
     setAllTasks(tasksRemoving);
     const pages = Math.trunc((tasksRemoving.length - 1) / numOfTasksOnPage) + 1;
@@ -49,7 +48,7 @@ export default function App() {
   }
 
   async function changeCheckTask(task) {
-    const response = await axios.patch(url + "task/5/" + task.uuid, {
+    await axios.patch("task/5/" + task.uuid, {
       done: !task.done,
     });
     task.done = !task.done;
@@ -59,14 +58,14 @@ export default function App() {
   async function handleFilter() {
     let response;
     if (filter === "" && order === "")
-      response = await axios.get(url + "tasks/5");
+      response = await axios.get("tasks/5");
     if (filter === "")
-      response = await axios.get(url + "tasks/5?order=" + order);
+      response = await axios.get("tasks/5?order=" + order);
     if (order === "")
-      response = await axios.get(url + "tasks/5?filterBy=" + filter);
+      response = await axios.get("tasks/5?filterBy=" + filter);
     else
       response = await axios.get(
-        url + "tasks/5?filterBy=" + filter + "&order=" + order
+        "tasks/5?filterBy=" + filter + "&order=" + order
       );
     setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
     setFilteredTasks([

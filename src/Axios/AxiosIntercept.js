@@ -12,7 +12,8 @@ customAxios.interceptors.response.use(
     } else return response;
   },
   (error) => {
-    return (error);
+    alert(error);
+    return error;
   }
 );
 
