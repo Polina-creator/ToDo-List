@@ -56,12 +56,7 @@ export default function App() {
   }
 
   async function handleFilter() {
-    let url;
-    if (filter === "" && order === "") url = "tasks/5";
-    else if (filter === "") url = "tasks/5?order=" + order;
-    else if (order === "") url = "tasks/5?filterBy=" + filter;
-    else url = "tasks/5?filterBy=" + filter + "&order=" + order;
-    const response = await axios.get(url);
+    const response = await axios.get("tasks/5?filterBy=" + filter + "&order=" + order);
     setNumberOfPages(Math.ceil(response.data.length / numOfTasksOnPage));
     setFilteredTasks([
       ...response.data.slice(
