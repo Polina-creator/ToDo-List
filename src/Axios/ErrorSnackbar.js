@@ -1,18 +1,18 @@
-import { Snackbar, Button } from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import React, { useState } from "react";
+import React from "react";
 
-export default function TasksList({ message }) {
-  const [open, setOpen] = useState(true);
- 
+export default function ErrorSnackbar({ message }) {
 
   return (
     <Snackbar
-      open={open}
+      id="message"
+      open={message !== '' && message!==undefined}
       autoHideDuration={3000}
-      onRequestClose = {()=>setOpen(false)}
     >
-      <Alert severity="error">{message}</Alert>
+      <Alert severity="error">
+        {message}
+      </Alert>
     </Snackbar>
   );
 }

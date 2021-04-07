@@ -35,7 +35,7 @@ export default function App() {
       name: newTaskText,
       done: false,
     });
-    setAllTasks([...allTasks, { ...response.data }]);
+    if (response.message==='')setAllTasks([...allTasks, { ...response.data }]);
     setError(response.message);
   }
 
@@ -76,6 +76,7 @@ export default function App() {
         currentPage * numOfTasksOnPage
       ),
     ]);
+    setError(response.message);
   }
 
   return (
